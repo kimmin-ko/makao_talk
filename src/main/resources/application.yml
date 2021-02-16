@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:log4jdbc:mysql://14.63.199.106:3305/makao_talk?characterEncodimg=UTF-8&useSSL=false&serverTimezone=UTC
+    username: root
+    password: root1234
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 500
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+logging.level:
+  org.hibernate.SQL: debug
+
+jwt:
+  secret: test-secret-key
+  access-token-life-time: 86400 # 1 day
+  refresh-token-life-time: 15552000 # 180 day

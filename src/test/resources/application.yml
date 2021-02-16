@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/jtalk
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format-sql: true
+        default_batch_fetch_size: 500
+    database-platform: org.hibernate.dialect.H2Dialect
+
+logging.level:
+  org.hibernate.SQL: debug
+
+jwt:
+  secret: test-secret-key
+  access-token-life-time: 300 # 5 minute
+  refresh-token-life-time: 86400 # 1 day
