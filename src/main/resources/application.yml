@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:log4jdbc:mysql://14.63.199.106:3305/makao_talk?characterEncodimg=UTF-8&useSSL=false&serverTimezone=UTC
+    url: jdbc:log4jdbc:mysql://14.63.199.106:3306/makao_talk?characterEncodimg=UTF-8&useSSL=false&serverTimezone=UTC
     username: root
     password: root1234
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
@@ -12,6 +12,13 @@ spring:
         format_sql: true
         default_batch_fetch_size: 500
     database-platform: org.hibernate.dialect.MySQL8Dialect
+  resources:
+    static-locations:
+  mvc:
+    view:
+      prefix: /static/views/
+      suffix: .html
+    static-path-pattern: /static/**
 
 logging.level:
   org.hibernate.SQL: debug

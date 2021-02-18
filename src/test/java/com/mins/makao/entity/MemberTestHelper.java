@@ -27,6 +27,10 @@ public class MemberTestHelper {
         return memberRepository.save(member);
     }
 
+    public void clearMember(Member member) {
+        memberRepository.delete(member);
+    }
+
     public void clearMember() {
         memberRepository.deleteAll();
     }

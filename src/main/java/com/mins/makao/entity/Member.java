@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -70,10 +71,24 @@ public class Member extends BaseTimeEntity {
     }
 
     /* 생성 메서드 */
+    public static Member join(String email, String password, String name, String account, String phoneNumber, LocalDate birthDate) {
+        return Member.builder()
+                .email(email)
+                .password(password)
+                .name(name)
+                .account(account)
+                .phoneNumber(phoneNumber)
+                .birthDate(birthDate)
+                .authority(Authority.ROLE_USER)
+                .build();
+    }
 
     /* 연관관계 메서드 */
 
     /* 비지니스 로직 */
+    public void encryptPassword(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
+    }
 
     /* 조회 로직 */
 

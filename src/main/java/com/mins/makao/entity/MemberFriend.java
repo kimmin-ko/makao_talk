@@ -7,9 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
@@ -19,7 +21,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @ToString(of = {"id", "friendName", "status", "createdDate"})
-public class MemberFriend {
+public class MemberFriend implements Persistable<MemberFriendId> {
 
     @EmbeddedId
     private MemberFriendId id;
@@ -54,6 +56,11 @@ public class MemberFriend {
     /* 생성 메서드 */
     public static MemberFriend create(Member member, Member friend) {
         return new MemberFriend(member, friend, friend.getName(), FriendStatus.NORMAL);
+    }
+
+    @Override
+    public boolean isNew() {
+        return Objects.isNull(createdDate);
     }
 
 }
