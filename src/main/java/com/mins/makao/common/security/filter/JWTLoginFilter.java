@@ -3,6 +3,7 @@ package com.mins.makao.common.security.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mins.makao.common.security.Tokens;
 import com.mins.makao.common.security.User;
+import com.mins.makao.common.security.UserDetailsServiceImpl;
 import com.mins.makao.common.security.UserLogin;
 import com.mins.makao.common.util.CookieUtil;
 import com.mins.makao.common.util.JWTUtil;
@@ -20,7 +21,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Objects;
 
 @Slf4j
 public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -28,11 +28,13 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
     private final JWTUtil jwtUtil;
     private final ObjectMapper objectMapper;
     private final AuthenticationManager authenticationManager;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-    public JWTLoginFilter(JWTUtil jwtUtil, ObjectMapper objectMapper, AuthenticationManager authenticationManager) {
+    public JWTLoginFilter(JWTUtil jwtUtil, ObjectMapper objectMapper, UserDetailsServiceImpl userDetailsServiceImpl, AuthenticationManager authenticationManager) {
         this.jwtUtil = jwtUtil;
         this.objectMapper = objectMapper;
         this.authenticationManager = authenticationManager;
+        this.userDetailsServiceImpl = userDetailsServiceImpl;
 
         setFilterProcessesUrl("/login");
     }
@@ -63,8 +65,13 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
         String accessToken = jwtUtil.generate(user.getId(), Tokens.Type.ACCESS);
         String refreshToken = jwtUtil.generate(user.getId(), Tokens.Type.REFRESH);
 
-        response.setHeader(JWTUtil.AUTH_HEADER, JWTUtil.BEARER + accessToken);
+        userDetailsServiceImpl.saveRefreshToken(user.getId(), refreshToken);
+
+        // TODO RefreshToken 을 LocalStorage 에 저장할 경우 XSS 에 대한 대비가 되어야함
         response.setHeader(JWTUtil.REFRESH_HEADER, refreshToken);
+
+        //TODO AccessToken 을 Cookie 에 저장하여 인증에 사용할 경우 CSRF 에 대한 대비가 되어야함
+        CookieUtil.create(response, "accessToken", accessToken, (int) jwtUtil.getProperties().getAccessTokenLifeTime());
     }
 
     @Override

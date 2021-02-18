@@ -20,6 +20,31 @@ public class FormController {
         return "/login";
     }
 
+    @GetMapping("/chat")
+    public String chatForm() {
+        return "/chat";
+    }
+
+    @GetMapping("/chatRoom")
+    public String chatRoomForm() {
+        return "/chatRoom";
+    }
+
+    @GetMapping("/find")
+    public String findForm() {
+        return "/find";
+    }
+
+    @GetMapping("/more")
+    public String moreForm() {
+        return "/more";
+    }
+
+    @GetMapping("/setting")
+    public String settingForm() {
+        return "/setting";
+    }
+
     @GetMapping("/join")
     public String joinForm() {
         return "/join";

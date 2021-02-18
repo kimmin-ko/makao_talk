@@ -51,6 +51,9 @@ public class Member extends BaseTimeEntity {
 
     private LocalDateTime withdrawalDate;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval = true)
+    private AuthToken authToken;
+
     public Member(String account, String email, String password, String name, LocalDate birthDate) {
         this.account = account;
         this.email = email;
@@ -84,6 +87,10 @@ public class Member extends BaseTimeEntity {
     }
 
     /* 연관관계 메서드 */
+    public void setAuthToken(AuthToken authToken) {
+        this.authToken = authToken;
+        authToken.setMember(this);
+    }
 
     /* 비지니스 로직 */
     public void encryptPassword(PasswordEncoder passwordEncoder) {

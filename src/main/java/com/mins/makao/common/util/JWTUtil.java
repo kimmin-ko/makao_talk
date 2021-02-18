@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.mins.makao.common.properties.JWTProperties;
 import com.mins.makao.common.security.Tokens;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -15,6 +16,7 @@ public class JWTUtil {
     public static final String REFRESH_HEADER = "refresh-token";
     public static final String BEARER = "Bearer ";
 
+    @Getter
     private final JWTProperties properties;
     private final Algorithm algorithm;
 

@@ -48,17 +48,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        JWTLoginFilter loginFilter = new JWTLoginFilter(jwtUtil, objectMapper, authenticationManager());
+        JWTLoginFilter loginFilter = new JWTLoginFilter(jwtUtil, objectMapper, userDetailsServiceImpl, authenticationManager());
 
         http
                 .csrf().disable()
                 .addFilter(loginFilter)
                 .authorizeRequests(config ->
                         config
-                                .antMatchers("/error").permitAll()
                                 .antMatchers("/favicon.ico").permitAll()
+                                .antMatchers("/error").permitAll()
                                 .antMatchers("/join").permitAll()
                                 .antMatchers("/loginForm").permitAll()
+                                .antMatchers("/open/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(config ->

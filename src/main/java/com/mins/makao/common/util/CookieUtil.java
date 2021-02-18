@@ -15,7 +15,7 @@ public class CookieUtil {
     /**
      * 쿠키 모두 출력
      */
-    public static void printAlLCookies(HttpServletRequest request) {
+    public static void printAlL(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
 
         Arrays.stream(cookies).forEach(cookie -> log.info("Cookie Name: {}, Cookie Value: {}", cookie.getName(), cookie.getValue()));
@@ -24,7 +24,7 @@ public class CookieUtil {
     /**
      * 쿠키 생성
      */
-    public static void createCookie(HttpServletResponse response, String name, String value, int day) {
+    public static void create(HttpServletResponse response, String name, String value, int day) {
         Objects.requireNonNull(response, "response is required.");
         Objects.requireNonNull(name, "cookie name is required.");
         Objects.requireNonNull(value, "cookie value is required.");
@@ -37,15 +37,15 @@ public class CookieUtil {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
         cookie.setMaxAge(day * 60 * 60 * 24);
-//        cookie.setSecure(true);
-//        cookie.setHttpOnly(true);
+//        cookie.setSecure(true); // https 스킴으로 요청시에만 전송됨
+        cookie.setHttpOnly(true); // cookie를 http를 통해서만 꺼낼 수 있음 -> javascript 에서 조회 불가
         response.addCookie(cookie);
     }
 
     /**
      * 쿠키 얻기
      */
-    public static Optional<String> getCookie(HttpServletRequest request, String name) {
+    public static Optional<String> get(HttpServletRequest request, String name) {
         Objects.requireNonNull(request, "request is required.");
         Objects.requireNonNull(name, "cookie name is required.");
 
@@ -66,7 +66,7 @@ public class CookieUtil {
     /**
      * 쿠키 삭제
      */
-    public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
+    public static void delete(HttpServletRequest request, HttpServletResponse response, String name) {
         Objects.requireNonNull(request, "request is required.");
         Objects.requireNonNull(response, "response is required.");
         Objects.requireNonNull(name, "cookie name is required.");
@@ -88,7 +88,7 @@ public class CookieUtil {
     /**
      * 모든 쿠키 삭제
      */
-    public static void deleteAllCookies(HttpServletRequest request, HttpServletResponse response) {
+    public static void deleteAll(HttpServletRequest request, HttpServletResponse response) {
         Objects.requireNonNull(request, "request is required.");
         Objects.requireNonNull(response, "response is required.");
 
@@ -107,7 +107,7 @@ public class CookieUtil {
     /**
      * 해당 domain의 쿠키 삭제
      */
-    public static void deleteCookieByDomain(HttpServletRequest request, HttpServletResponse response, String cookieName, String domainName) {
+    public static void deleteByDomain(HttpServletRequest request, HttpServletResponse response, String cookieName, String domainName) {
         Objects.requireNonNull(request, "request is required.");
         Objects.requireNonNull(response, "response is required.");
         Objects.requireNonNull(cookieName, "cookieName is required.");

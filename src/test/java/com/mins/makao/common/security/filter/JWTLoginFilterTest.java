@@ -16,11 +16,15 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -64,8 +68,9 @@ class JWTLoginFilterTest {
     @DisplayName("1. JWT 로 로그인을 시도한다.")
     void jwt_login() throws URISyntaxException {
         // given
+        String email = "user1@test.com";
         UserLogin user1 = UserLogin.builder()
-                .username("user1@test.com")
+                .username(email)
                 .password("user19999")
                 .build();
 
@@ -74,8 +79,16 @@ class JWTLoginFilterTest {
         // when
         ResponseEntity<String> response = restTemplate.exchange(uri("/login"), HttpMethod.POST, entity, String.class);
 
+        String refreshToken = response.getHeaders().get("refresh-token").get(0);
+        String cookies = response.getHeaders().get("Set-Cookie").get(0);
+
+        Member findMember = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("회원을 찾을 수 없습니다. : " + email));
+
         // then
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(cookies).contains("accessToken");
+        assertThat(findMember.getAuthToken().getRefreshToken()).isEqualTo(refreshToken);
     }
 
     @Test
@@ -91,7 +104,7 @@ class JWTLoginFilterTest {
 
         // then
         assertThatThrownBy(() -> restTemplate.exchange(uri("/login"), HttpMethod.POST, entity, String.class))
-                .isInstanceOf(HttpClientErrorException.class);
+                .isInstanceOf(ResourceAccessException.class);
     }
 
 }
