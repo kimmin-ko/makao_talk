@@ -1,17 +1,17 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/jtalk
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:log4jdbc:mysql://14.63.199.106:3306/makao_talk?characterEncodimg=UTF-8&useSSL=false&serverTimezone=UTC
+    username: root
+    password: root1234
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format-sql: true
         default_batch_fetch_size: 500
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MySQL8Dialect
 
 logging.level:
   org.hibernate.SQL: debug

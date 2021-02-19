@@ -1,17 +1,14 @@
 package com.mins.makao.entity;
 
-import com.mins.makao.entity.embedded.MemberFriendId;
 import com.mins.makao.entity.enumeration.FriendStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
@@ -21,19 +18,18 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @ToString(of = {"id", "friendName", "status", "createdDate"})
-public class MemberFriend implements Persistable<MemberFriendId> {
+public class MemberFriend {
 
-    @EmbeddedId
-    private MemberFriendId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @MapsId("memberId")
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", unique = true, nullable = false)
     private Member member;
 
-    @MapsId("friendId")
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "friend_id")
+    @JoinColumn(name = "friend_id", unique = true, nullable = false)
     private Member friend;
 
     private String friendName;
@@ -56,11 +52,6 @@ public class MemberFriend implements Persistable<MemberFriendId> {
     /* 생성 메서드 */
     public static MemberFriend create(Member member, Member friend) {
         return new MemberFriend(member, friend, friend.getName(), FriendStatus.NORMAL);
-    }
-
-    @Override
-    public boolean isNew() {
-        return Objects.isNull(createdDate);
     }
 
 }

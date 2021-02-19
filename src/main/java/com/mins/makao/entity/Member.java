@@ -51,7 +51,7 @@ public class Member extends BaseTimeEntity {
 
     private LocalDateTime withdrawalDate;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private AuthToken authToken;
 
     public Member(String account, String email, String password, String name, LocalDate birthDate) {
